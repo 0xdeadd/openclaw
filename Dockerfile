@@ -189,6 +189,7 @@ RUN --mount=type=cache,id=openclaw-bookworm-apt-cache,target=/var/cache/apt,shar
       chown -R node:node /home/node/.cache/ms-playwright; \
     fi
 
+<<<<<<< HEAD
 # Optionally install Docker CLI for sandbox container management.
 # Build with: docker build --build-arg OPENCLAW_INSTALL_DOCKER_CLI=1 ...
 # Adds ~50MB. Only the CLI is installed — no Docker daemon.
@@ -224,6 +225,19 @@ RUN --mount=type=cache,id=openclaw-bookworm-apt-cache,target=/var/cache/apt,shar
 # Expose the CLI binary without requiring npm global writes as non-root.
 RUN ln -sf /app/openclaw.mjs /usr/local/bin/openclaw \
  && chmod 755 /app/openclaw.mjs
+
+USER node
+COPY --chown=node:node . .
+RUN pnpm build
+# Pre-compile extensions so jiti doesn't need to transpile TypeScript at runtime
+RUN npx tsdown extensions/telegram/index.ts \
+      --outDir extensions/telegram/dist \
+      --platform node \
+      --external "openclaw/plugin-sdk" \
+      --external "openclaw/plugin-sdk/account-id"
+# Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
+ENV OPENCLAW_PREFER_PNPM=1
+RUN pnpm ui:build
 
 ENV NODE_ENV=production
 
