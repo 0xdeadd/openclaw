@@ -17,6 +17,9 @@ __pycache__/
 ui/src/ui/__screenshots__/
 ui/playwright-report/
 ui/test-results/
+playwright-report/
+test-results/playwright/
+/blob-report/
 packages/dashboard-next/.next/
 packages/dashboard-next/out/
 
