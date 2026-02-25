@@ -45,6 +45,12 @@ RUN if [ -n "$OPENCLAW_INSTALL_BROWSER" ]; then \
 USER node
 COPY --chown=node:node . .
 RUN pnpm build
+# Pre-compile extensions so jiti doesn't need to transpile TypeScript at runtime
+RUN npx tsdown extensions/telegram/index.ts \
+      --outDir extensions/telegram/dist \
+      --platform node \
+      --external "openclaw/plugin-sdk" \
+      --external "openclaw/plugin-sdk/account-id"
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
