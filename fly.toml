@@ -3,11 +3,13 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'openclaw-misty-paper-4826'
+app = 'openclaw-zanysplayworld'
 primary_region = 'iad'
 
 [build]
   dockerfile = 'Dockerfile'
+  [build.args]
+    OPENCLAW_INSTALL_BROWSER = '1'
 
 [env]
   NODE_ENV = 'production'
